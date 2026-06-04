@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1929">
+<title>Drakenboot Indeling</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --abyss: #0a1929;
+    --deep: #102a3f;
+    --mid: #1a3a52;
+    --shallow: #2d5870;
+    --foam: #e8f1f5;
+    --bone: #f5ebd7;
+    --dragon: #ff6b3d;
+    --dragon-glow: #ff8a5c;
+    --gold: #f5b942;
+    --teal: #4a9b8e;
+    --rose: #e85a7c;
+    --line: rgba(245, 235, 215, 0.10);
+    --line-strong: rgba(245, 235, 215, 0.18);
+
+    --fs-base: 16px;
+    --fs-meta: 13px;
+    --fs-mono: 13px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    background: var(--abyss);
+    color: var(--bone);
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    font-size: var(--fs-base);
+    line-height: 1.4;
+    min-height: 100vh;
+  }
+
+  body {
+    background:
+      radial-gradient(ellipse at 30% 0%, rgba(255, 107, 61, 0.10) 0%, transparent 50%),
+      radial-gradient(ellipse at 90% 80%, rgba(74, 155, 142, 0.07) 0%, transparent 60%),
+      linear-gradient(180deg, var(--abyss) 0%, #060f1a 100%);
+    background-attachment: fixed;
+    padding: 28px 28px 80px;
+    max-width: 1280px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' numOctaves='2' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    mix-blend-mode: overlay;
+  }
+
+  .wrap { position: relative; z-index: 1; }
+
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .title-block { display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 7px 14px;
+    border: 1px solid rgba(245, 185, 66, 0.32);
+    border-radius: 999px;
+  }
+  .badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--dragon);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--dragon);
+    animation: pulse 1.8s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    line-height: 0.9;
+    letter-spacing: 0.01em;
+    color: var(--bone);
+  }
+  h1 .accent { color: var(--dragon); }
+  .sub {
+    font-size: 13px;
+    color: rgba(245, 235, 215, 0.55);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* HEADER TOGGLES (top-right) */
+  .header-tools {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .tool-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line-strong);
+    color: var(--bone);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .tool-btn:hover { background: rgba(255,255,255,0.07); }
+  .tool-btn.active {
+    background: rgba(245,185,66,0.18);
+    border-color: rgba(245,185,66,0.5);
+    color: var(--gold);
+  }
+  .tool-btn .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(245, 235, 215, 0.2);
+  }
+  .tool-btn.active .dot {
+    background: var(--gold);
+    box-shadow: 0 0 8px var(--gold);
+  }
+
+  /* LAYOUT */
+  .layout {
+    display: grid;
+    grid-template-columns: 360px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  @media (max-width: 960px) {
+    .layout { grid-template-columns: 1fr; }
+    h1 { font-size: 44px; }
+  }
+
+  .sidebar { display: flex; flex-direction: column; gap: 20px; }
+  .main    { display: flex; flex-direction: column; gap: 20px; }
+
+  /* SECTION TITLE */
+  .section-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.6);
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--line);
+  }
+  .section-title .count {
+    margin-left: auto;
+    font-size: 11px;
+    color: rgba(245,235,215,0.45);
+    letter-spacing: 0.08em;
+  }
+
+  /* CARD */
+  .card {
+    padding: 20px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+  }
+
+  /* ROSTER */
+  .pool {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    min-height: 40px;
+    margin-bottom: 16px;
+  }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 10px 8px 14px;
+    background: rgba(74, 155, 142, 0.13);
+    border: 1px solid rgba(74, 155, 142, 0.42);
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--bone);
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+  .chip:hover { background: rgba(74, 155, 142, 0.18); }
+  .chip:active { transform: scale(0.98); }
+  .chip.assigned {
+    background: rgba(255, 107, 61, 0.08);
+    border-color: rgba(255, 107, 61, 0.28);
+    color: rgba(245, 235, 215, 0.55);
+  }
+  .chip.assigned .name { text-decoration: line-through; }
+  .chip .kg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    opacity: 0.9;
+  }
+  .chip .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 5px;
+    letter-spacing: 0.05em;
+    line-height: 1.4;
+    font-weight: 700;
+  }
+  .chip .tag.side-l { background: rgba(74,155,142,0.28); color: #8fd4c5; }
+  .chip .tag.side-r { background: rgba(255,107,61,0.28); color: var(--dragon-glow); }
+  .chip .tag.gender { background: rgba(245,185,66,0.2); color: var(--gold); }
+  .chip .tag.train  { background: rgba(245,235,215,0.10); color: rgba(245,235,215,0.8); }
+  .chip .tag.pos    { background: rgba(74,155,142,0.10); color: rgba(245,235,215,0.7); font-weight: 500; }
+  .chip .x {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(232, 90, 124, 0.22);
+    color: var(--rose);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer;
+    margin-left: 2px;
+    line-height: 1;
+  }
+  .chip .x:hover { background: rgba(232, 90, 124, 0.4); }
+  .pool:empty::before {
+    content: 'Voeg roeiers toe →';
+    color: rgba(245, 235, 215, 0.35);
+    font-size: 14px;
+    padding: 10px 0;
+  }
+
+  /* ADD FORM */
+  .add-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  input[type="text"], input[type="number"] {
+    flex: 1;
+    background: rgba(0,0,0,0.28);
+    border: 1px solid var(--line-strong);
+    color: var(--bone);
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    outline: none;
+    min-width: 0;
+  }
+  input[type="number"] { flex: 0 0 90px; }
+  input::placeholder { color: rgba(245, 235, 215, 0.35); }
+  input:focus { border-color: var(--gold); }
+
+  button.add-btn {
+    flex: 0 0 auto;
+    background: var(--gold);
+    color: var(--abyss);
+    border: none;
+    padding: 0 22px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: transform 0.1s;
+  }
+  button.add-btn:active { transform: scale(0.96); }
+
+  .meta-form { display: flex; flex-direction: column; gap: 10px; }
+  .meta-row {
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .meta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.55);
+    min-width: 80px;
+  }
+
+  .seg {
+    display: inline-flex;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--line-strong);
+    border-radius: 9px;
+    padding: 3px;
+    gap: 2px;
+    flex: 1;
+  }
+  .seg button {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: rgba(245,235,215,0.6);
+    padding: 8px 6px;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    border-radius: 7px;
+    transition: all 0.12s;
+    letter-spacing: 0.04em;
+    min-width: 0;
+  }
+  .seg button:hover { color: var(--bone); }
+  .seg button.active {
+    background: var(--gold);
+    color: var(--abyss);
+    font-weight: 700;
+  }
+  .seg.compact button { padding: 7px 4px; font-size: 11px; }
+
+  /* CONFIG STRIP (in sidebar) */
+  .strip { display: flex; flex-direction: column; gap: 10px; }
+  .strip > .seg { padding: 4px; }
+  .strip > .seg button { padding: 10px 8px; font-size: 13px; letter-spacing: 0.08em; }
+  .strip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.5);
+    margin-bottom: 4px;
+  }
+
+  /* BALANCE / TRIM */
+  .gauges { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 600px) {
+    .gauges { grid-template-columns: 1fr; }
+  }
+  .gauge { padding: 0; }
+  .gauge-header {
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.65);
+    margin-bottom: 10px;
+  }
+  .bar {
+    height: 10px;
+    background: rgba(0,0,0,0.32);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+  }
+  .fill-l    { background: linear-gradient(90deg, var(--teal) 0%, #6abfae 100%); transition: width 0.3s ease; }
+  .fill-r    { background: linear-gradient(90deg, var(--dragon) 0%, var(--dragon-glow) 100%); transition: width 0.3s ease; }
+  .fill-front{ background: linear-gradient(90deg, var(--gold) 0%, #ffd687 100%); transition: width 0.3s ease; }
+  .fill-back { background: linear-gradient(90deg, var(--shallow) 0%, #4d7e98 100%); transition: width 0.3s ease; }
+  .numbers {
+    display: flex; justify-content: space-between;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+  .numbers .l { color: var(--teal); }
+  .numbers .r { color: var(--dragon-glow); }
+  .numbers .front { color: var(--gold); }
+  .numbers .back { color: #6fa3bc; }
+  .numbers .diff {
+    color: rgba(245, 235, 215, 0.55);
+    font-size: 12px;
+  }
+
+  /* WARNINGS */
+  .warnings { display: flex; flex-direction: column; gap: 8px; }
+  .warnings:empty { display: none; }
+  .warn {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: rgba(245, 185, 66, 0.08);
+    border: 1px solid rgba(245, 185, 66, 0.28);
+    border-radius: 10px;
+    font-size: 13px;
+    color: rgba(245, 235, 215, 0.9);
+  }
+  .warn::before {
+    content: '⚠';
+    color: var(--gold);
+    font-size: 16px;
+  }
+  .warn.bad {
+    background: rgba(232, 90, 124, 0.09);
+    border-color: rgba(232, 90, 124, 0.3);
+  }
+  .warn.bad::before { color: var(--rose); }
+
+  /* BENCH (sit-outs) */
+  .bench {
+    padding: 14px 16px;
+    background: rgba(0,0,0,0.2);
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+  }
+  .bench:empty { display: none; }
+  .bench-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.55);
+    margin-bottom: 8px;
+  }
+  .bench-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .bench-list .b-chip {
+    font-size: 13px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: rgba(245, 235, 215, 0.07);
+    border: 1px solid var(--line);
+    color: rgba(245, 235, 215, 0.75);
+  }
+
+  /* BOAT */
+  .boat-wrapper {
+    position: relative;
+    max-width: 780px;
+    width: 100%;
+    margin: 56px auto 10px;
+    padding: 0 4px;
+  }
+  .boat {
+    position: relative;
+    background: linear-gradient(180deg,
+      rgba(139, 94, 60, 0.95) 0%,
+      rgba(110, 70, 40, 0.95) 50%,
+      rgba(139, 94, 60, 0.95) 100%);
+    border-radius: 50% 50% 18% 18% / 6% 6% 4% 4%;
+    padding: 44px 22px 54px;
+    box-shadow:
+      inset 0 0 0 2px rgba(0,0,0,0.4),
+      inset 0 0 30px rgba(0,0,0,0.5),
+      0 20px 50px rgba(0,0,0,0.45);
+    border: 1px solid rgba(245, 185, 66, 0.22);
+  }
+  .boat::before {
+    content: '';
+    position: absolute;
+    top: -24px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 30px solid rgba(110, 70, 40, 0.95);
+    filter: drop-shadow(0 -2px 0 rgba(245, 185, 66, 0.22));
+  }
+  .boat::after {
+    content: '';
+    position: absolute;
+    bottom: -14px; left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 26px;
+    background: rgba(110, 70, 40, 0.95);
+    border-radius: 0 0 50% 50%;
+    border: 1px solid rgba(245, 185, 66, 0.18);
+    border-top: none;
+  }
+  .dragon-head {
+    position: absolute;
+    top: -46px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 38px;
+    z-index: 2;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.5));
+  }
+  .position-label {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: rgba(245, 235, 215, 0.42);
+    text-transform: uppercase;
+  }
+  .pos-bow { top: 14px; }
+  .pos-stern { bottom: 16px; }
+
+  .zone-divider {
+    height: 1px;
+    background: rgba(245, 185, 66, 0.13);
+    margin: 2px 0;
+  }
+
+  /* SEAT GRID */
+  .rows { display: flex; flex-direction: column; gap: 6px; }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 36px 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+  .row-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(245, 185, 66, 0.55);
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.1;
+  }
+  .row-num .zone {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 0.16em;
+    color: rgba(245, 235, 215, 0.3);
+    margin-top: 1px;
+  }
+  .seat {
+    position: relative;
+    background: rgba(245, 235, 215, 0.04);
+    border: 1.5px dashed rgba(245, 235, 215, 0.18);
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-height: 44px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .seat:hover { background: rgba(245,235,215,0.06); }
+  .seat:active { transform: scale(0.98); }
+  .seat.filled {
+    background: linear-gradient(135deg, rgba(74, 155, 142, 0.28), rgba(74, 155, 142, 0.16));
+    border: 1.5px solid var(--teal);
+    border-style: solid;
+    justify-content: space-between;
+    text-align: left;
+  }
+  .seat.right.filled {
+    background: linear-gradient(135deg, rgba(255, 107, 61, 0.24), rgba(255, 107, 61, 0.13));
+    border-color: var(--dragon);
+  }
+  .seat.misfit { box-shadow: inset 0 0 0 1.5px rgba(232, 90, 124, 0.5); }
+  .seat.pinned {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
+  }
+  .seat .pin-mark {
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    font-size: 11px;
+    line-height: 1;
+    pointer-events: none;
+    filter: drop-shadow(0 1px 1px rgba(0,0,0,0.4));
+  }
+  .seat .empty-icon { font-size: 18px; color: rgba(245, 235, 215, 0.28); }
+  .seat .name {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.15;
+    color: var(--bone);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .seat .weight {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    opacity: 0.95;
+    flex-shrink: 0;
+  }
+  .seat .micro {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: rgba(245, 235, 215, 0.55);
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+  }
+
+  /* ACTIONS */
+  .actions {
+    display: flex; gap: 10px;
+    flex-wrap: wrap;
+  }
+  .actions button {
+    flex: 1;
+    min-width: 0;
+    padding: 14px 10px;
+    border-radius: 12px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    background: rgba(255,255,255,0.04);
+    color: var(--bone);
+    transition: all 0.15s;
+  }
+  .actions button:hover { background: rgba(255,255,255,0.07); }
+  .actions button:active { transform: scale(0.97); }
+  .btn-clear {
+    color: var(--rose) !important;
+    border-color: rgba(232, 90, 124, 0.32) !important;
+    flex: 0 0 90px !important;
+  }
+  .btn-strong {
+    background: linear-gradient(135deg, var(--dragon), var(--dragon-glow)) !important;
+    color: var(--abyss) !important;
+    border: none !important;
+    font-weight: 700;
+  }
+  .btn-fair {
+    background: linear-gradient(135deg, var(--gold), #ffd687) !important;
+    color: var(--abyss) !important;
+    border: none !important;
+    font-weight: 700;
+  }
+
+  /* MODAL */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(6, 15, 26, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+    padding: 20px;
+  }
+  .modal-bg.show { display: flex; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: var(--deep);
+    border: 1px solid var(--line-strong);
+    border-radius: 20px;
+    padding: 24px 24px 26px;
+    width: 100%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    animation: pop 0.2s ease;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  }
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(10px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .modal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.04em;
+    margin-bottom: 6px;
+  }
+  .modal-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(245, 235, 215, 0.55);
+    margin-bottom: 20px;
+  }
+  .person-list { display: flex; flex-direction: column; gap: 7px; }
+  .person-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.1s;
+    gap: 10px;
+  }
+  .person-item:hover { background: rgba(255,255,255,0.07); }
+  .person-item.disabled { opacity: 0.35; pointer-events: none; }
+  .person-item.locked  { opacity: 0.65; }
+  .person-item .pinfo {
+    display: flex; flex-direction: column; gap: 4px;
+    min-width: 0;
+  }
+  .person-item .pname { font-weight: 500; font-size: 16px; }
+  .person-item .pmeta {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(245, 235, 215, 0.55);
+  }
+  .person-item .pmeta .t {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(245,235,215,0.06);
+  }
+  .person-item .pkg {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--gold);
+    flex-shrink: 0;
+  }
+  .person-item.clear-option {
+    background: rgba(232, 90, 124, 0.08);
+    border-color: rgba(232, 90, 124, 0.28);
+    color: var(--rose);
+    text-align: center;
+    justify-content: center;
+  }
+  .person-item.pin-option {
+    background: rgba(245, 185, 66, 0.10);
+    border-color: rgba(245, 185, 66, 0.32);
+    color: var(--gold);
+    text-align: center;
+    justify-content: center;
+  }
+  .modal-actions-row {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .modal-actions-row .person-item { flex: 1; margin: 0; }
+  .empty-pool-msg {
+    text-align: center;
+    padding: 30px 20px;
+    color: rgba(245, 235, 215, 0.4);
+    font-size: 14px;
+  }
+
+  /* EDIT MODAL */
+  .edit-form { display: flex; flex-direction: column; gap: 12px; }
+  .edit-form .input-row { display: flex; gap: 8px; }
+  .edit-form input { flex: 1; }
+  .edit-form input.kg { flex: 0 0 100px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 8px; }
+  .modal-actions button {
+    flex: 1;
+    padding: 13px;
+    border-radius: 11px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    border: 1px solid var(--line-strong);
+    background: rgba(255,255,255,0.04);
+    color: var(--bone);
+  }
+  .modal-actions .save-btn {
+    background: var(--gold); color: var(--abyss);
+    border: none; font-weight: 700;
+  }
+  .modal-actions .del-btn {
+    color: var(--rose);
+    border-color: rgba(232, 90, 124, 0.32);
+    flex: 0 0 80px;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--gold);
+    color: var(--abyss);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    z-index: 200;
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.5);
+    max-width: 90vw;
+    text-align: center;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* HIDE-WEIGHT MODE */
+  body.hide-weight .kg,
+  body.hide-weight .weight,
+  body.hide-weight .pkg,
+  body.hide-weight .numbers .l,
+  body.hide-weight .numbers .r,
+  body.hide-weight .numbers .front,
+  body.hide-weight .numbers .back,
+  body.hide-weight .numbers .diff,
+  body.hide-weight .b-kg {
+    visibility: hidden;
+  }
+  body.hide-weight .numbers { min-height: 18px; }
+  body.hide-weight #weightInput,
+  body.hide-weight #editWeight {
+    color: transparent;
+  }
+  body.hide-weight #weightInput::placeholder,
+  body.hide-weight #editWeight::placeholder {
+    color: rgba(245,235,215,0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <div class="title-block">
+    <div>
+      <h1>Draken<span class="accent">boot</span></h1>
+      <div class="sub">Indeling — Tap een stoel om te vullen</div>
+    </div>
+    <div class="badge" id="topBadge">16 plekken · 8 × 2</div>
+  </div>
+  <div class="header-tools">
+    <button class="tool-btn" id="hideWeightBtn" type="button">
+      <span class="dot"></span><span>Verberg gewicht</span>
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ========== SIDEBAR ========== -->
+  <aside class="sidebar">
+
+    <!-- CONFIG STRIP -->
+    <section class="card">
+      <div class="section-title">Boot &amp; race</div>
+      <div class="strip">
+        <div>
+          <div class="strip-label">Banken</div>
+          <div class="seg" data-field="benches" id="benchSeg">
+            <button data-val="8" class="active">8 banken</button>
+            <button data-val="9">9 banken</button>
+          </div>
+        </div>
+        <div>
+          <div class="strip-label">Actieve race</div>
+          <div class="seg" data-field="activeRace" id="raceSeg">
+            <button data-val="0" class="active">Race 1</button>
+            <button data-val="1">Race 2</button>
+            <button data-val="2">Race 3</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROSTER -->
+    <section class="card">
+      <div class="section-title">
+        Roeiers <span class="count" id="rosterCount"></span>
+      </div>
+      <div class="pool" id="pool"></div>
+
+      <div class="add-row">
+        <input type="text" id="nameInput" placeholder="Naam" autocomplete="off">
+        <input type="number" id="weightInput" placeholder="kg" min="30" max="200">
+        <button class="add-btn" id="addBtn">+</button>
+      </div>
+
+      <div class="meta-form" id="metaForm">
+        <div class="meta-row">
+          <span class="meta-label">Kant</span>
+          <div class="seg" data-field="side">
+            <button data-val="links">Bakboord</button>
+            <button data-val="maakt niet uit" class="active">↔</button>
+            <button data-val="rechts">Stuurboord</button>
+          </div>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">Trainen</span>
+          <div class="seg compact" data-field="trainings">
+            <button data-val="0" class="active">0</button>
+            <button data-val="1">1</button>
+            <button data-val="2">2</button>
+            <button data-val="3">3</button>
+            <button data-val="4">4</button>
+            <button data-val="5">5</button>
+          </div>
+        </div>
+        <div class="meta-row">
+          <span class="meta-label">M / V</span>
+          <div class="seg compact" data-field="gender" style="flex:0 0 100px">
+            <button data-val="V" class="active">V</button>
+            <button data-val="M">M</button>
+          </div>
+          <div class="seg compact" data-field="posPref">
+            <button data-val="voor">Voor</button>
+            <button data-val="motor">Motor</button>
+            <button data-val="achter">Achter</button>
+            <button data-val="geen voorkeur" class="active">?</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIONS -->
+    <section class="card">
+      <div class="section-title">Indeling</div>
+      <div class="actions">
+        <button class="btn-clear" id="clearBtn">Leeg</button>
+        <button class="btn-strong" id="strongBtn">Sterkste team</button>
+        <button class="btn-fair" id="fairBtn">Eerlijk 3×</button>
+      </div>
+    </section>
+
+  </aside>
+
+  <!-- ========== MAIN ========== -->
+  <main class="main">
+
+    <!-- BALANCE + TRIM -->
+    <section class="card">
+      <div class="gauges">
+        <div class="gauge">
+          <div class="gauge-header">
+            <span>← Bakboord</span>
+            <span>Balans</span>
+            <span>Stuurboord →</span>
+          </div>
+          <div class="bar">
+            <div class="fill-l" id="fillL" style="width:50%"></div>
+            <div class="fill-r" id="fillR" style="width:50%"></div>
+          </div>
+          <div class="numbers">
+            <span class="l" id="kgL">0 kg</span>
+            <span class="diff" id="diff">·</span>
+            <span class="r" id="kgR">0 kg</span>
+          </div>
+        </div>
+        <div class="gauge">
+          <div class="gauge-header">
+            <span>↑ Boeg</span>
+            <span>Trim</span>
+            <span>Achter ↓</span>
+          </div>
+          <div class="bar">
+            <div class="fill-front" id="fillFront" style="width:50%"></div>
+            <div class="fill-back" id="fillBack" style="width:50%"></div>
+          </div>
+          <div class="numbers">
+            <span class="front" id="kgFront">0 kg</span>
+            <span class="diff" id="diffTrim">·</span>
+            <span class="back" id="kgBack">0 kg</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOAT -->
+    <div class="boat-wrapper">
+      <div class="boat">
+        <div class="dragon-head">🐉</div>
+        <div class="position-label pos-bow">Boeg</div>
+        <div class="rows" id="rows"></div>
+        <div class="position-label pos-stern">Achter</div>
+      </div>
+    </div>
+
+    <!-- WARNINGS -->
+    <div class="warnings" id="warnings"></div>
+
+    <!-- BENCH (sit-outs for current race) -->
+    <div class="bench" id="benchBox"></div>
+
+  </main>
+
+</div>
+
+</div>
+
+<!-- SEAT-PICK MODAL -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modal">
+    <div class="modal-title" id="modalTitle">Kies roeier</div>
+    <div class="modal-sub" id="modalSub">Bank 1 · Bakboord</div>
+    <div class="person-list" id="personList"></div>
+  </div>
+</div>
+
+<!-- EDIT-PADDLER MODAL -->
+<div class="modal-bg" id="editBg">
+  <div class="modal" id="editModal">
+    <div class="modal-title">Roeier aanpassen</div>
+    <div class="modal-sub" id="editSub">—</div>
+    <div class="edit-form" id="editForm">
+      <div class="input-row">
+        <input type="text" id="editName" placeholder="Naam" autocomplete="off">
+        <input type="number" id="editWeight" class="kg" placeholder="kg" min="30" max="200">
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Kant</span>
+        <div class="seg" data-field="side" data-edit="1">
+          <button data-val="links">Bakboord</button>
+          <button data-val="maakt niet uit">↔</button>
+          <button data-val="rechts">Stuurboord</button>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">Trainen</span>
+        <div class="seg compact" data-field="trainings" data-edit="1">
+          <button data-val="0">0</button>
+          <button data-val="1">1</button>
+          <button data-val="2">2</button>
+          <button data-val="3">3</button>
+          <button data-val="4">4</button>
+          <button data-val="5">5</button>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span class="meta-label">M / V</span>
+        <div class="seg compact" data-field="gender" data-edit="1" style="flex:0 0 100px">
+          <button data-val="V">V</button>
+          <button data-val="M">M</button>
+        </div>
+        <div class="seg compact" data-field="posPref" data-edit="1">
+          <button data-val="voor">Voor</button>
+          <button data-val="motor">Motor</button>
+          <button data-val="achter">Achter</button>
+          <button data-val="geen voorkeur">?</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="del-btn" id="editDelete">Wis</button>
+        <button id="editCancel">Annuleer</button>
+        <button class="save-btn" id="editSave">Opslaan</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Opgeslagen</div>
+
+<script>
+(function() {
+  // ===== Constants (finetune-baar bovenin) =====
+  const STORAGE_KEY  = 'drakenboot_v2';
+  const LEGACY_KEY   = 'drakenboot_v1';
+
+  const GEWICHT_FACTOR  = 0.5;   // 70 kg → 35 punten
+  const TRAINING_FACTOR = 8;     // 4× trainen → 32 punten
+  const MAN_BONUS       = 8;     // = 1 training equivalent (ruwe kracht-proxy)
+  const DEFAULT_WEIGHT  = 70;
+
+  const N_RACES = 3;
+  const LR_WARN_KG     = 8;
+  const TRIM_WARN_KG   = 12;
+  const LOW_TRAINED_PER_RACE_WARN = 3;
+
+  const SIDES   = ['links', 'maakt niet uit', 'rechts'];
+  const PREFS   = ['voor', 'motor', 'achter', 'geen voorkeur'];
+  const GENDERS = ['M', 'V'];
+
+  // Verstopte testdata — laden via Cmd/Ctrl+Shift+D
+  const DUMMY_ROEIERS = [
+    { name: 'Anna',    weight: 62, side: 'links',          trainings: 4, gender: 'V', posPref: 'voor' },
+    { name: 'Bram',    weight: 88, side: 'rechts',         trainings: 5, gender: 'M', posPref: 'motor' },
+    { name: 'Cas',     weight: 75, side: 'maakt niet uit', trainings: 3, gender: 'M', posPref: 'achter' },
+    { name: 'Dilan',   weight: 70, side: 'links',          trainings: 2, gender: 'V', posPref: 'geen voorkeur' },
+    { name: 'Eva',     weight: 58, side: 'maakt niet uit', trainings: 5, gender: 'V', posPref: 'voor' },
+    { name: 'Finn',    weight: 92, side: 'rechts',         trainings: 4, gender: 'M', posPref: 'motor' },
+    { name: 'Guus',    weight: 81, side: 'maakt niet uit', trainings: 3, gender: 'M', posPref: 'achter' },
+    { name: 'Hester',  weight: 64, side: 'links',          trainings: 1, gender: 'V', posPref: 'voor' },
+    { name: 'Iris',    weight: 60, side: 'links',          trainings: 3, gender: 'V', posPref: 'geen voorkeur' },
+    { name: 'Joost',   weight: 86, side: 'rechts',         trainings: 5, gender: 'M', posPref: 'motor' },
+    { name: 'Kim',     weight: 67, side: 'maakt niet uit', trainings: 2, gender: 'V', posPref: 'geen voorkeur' },
+    { name: 'Lars',    weight: 79, side: 'rechts',         trainings: 4, gender: 'M', posPref: 'achter' },
+    { name: 'Mira',    weight: 66, side: 'links',          trainings: 2, gender: 'V', posPref: 'voor' },
+    { name: 'Noor',    weight: 59, side: 'maakt niet uit', trainings: 0, gender: 'V', posPref: 'geen voorkeur' },
+    { name: 'Otto',    weight: 90, side: 'rechts',         trainings: 5, gender: 'M', posPref: 'motor' },
+    { name: 'Pim',     weight: 78, side: 'links',          trainings: 3, gender: 'M', posPref: 'achter' },
+    { name: 'Quincy',  weight: 72, side: 'maakt niet uit', trainings: 4, gender: 'M', posPref: 'motor' },
+    { name: 'Roos',    weight: 65, side: 'links',          trainings: 1, gender: 'V', posPref: 'voor' },
+    { name: 'Sven',    weight: 84, side: 'rechts',         trainings: 0, gender: 'M', posPref: 'geen voorkeur' },
+    { name: 'Tess',    weight: 61, side: 'maakt niet uit', trainings: 3, gender: 'V', posPref: 'voor' },
+    { name: 'Ümran',   weight: 68, side: 'links',          trainings: 1, gender: 'V', posPref: 'geen voorkeur' },
+    { name: 'Veerle',  weight: 70, side: 'rechts',         trainings: 4, gender: 'V', posPref: 'motor' }
+  ];
+
+  // ===== State =====
+  let state = {
+    benches: 8,
+    paddlers: [],
+    races: [],
+    activeRace: 0,
+    hideWeight: false
+  };
+
+  let pendingMeta = {
+    side: 'maakt niet uit',
+    trainings: 0,
+    gender: 'V',
+    posPref: 'geen voorkeur'
+  };
+
+  // ===== Sterkte =====
+  function sterkte(p) {
+    const w = effW(p);
+    const t = (typeof p.trainings === 'number') ? p.trainings : 0;
+    return w * GEWICHT_FACTOR + t * TRAINING_FACTOR + (p.gender === 'M' ? MAN_BONUS : 0);
+  }
+  function effW(p) {
+    return (typeof p.weight === 'number' && p.weight > 0) ? p.weight : DEFAULT_WEIGHT;
+  }
+
+  // ===== Boat geometry =====
+  function totalSeats(b = state.benches) { return b * 2; }
+  function zonesConfig(b = state.benches) {
+    const achterRows = [];
+    for (let i = 6; i < b; i++) achterRows.push(i);
+    return [
+      { name: 'voor',   rows: [0, 1, 2] },
+      { name: 'motor',  rows: [3, 4, 5] },
+      { name: 'achter', rows: achterRows }
+    ];
+  }
+  function zoneForRow(row) {
+    if (row <= 2) return 'voor';
+    if (row <= 5) return 'motor';
+    return 'achter';
+  }
+  function seatLabel(idx) {
+    const row = Math.floor(idx / 2) + 1;
+    const side = idx % 2 === 0 ? 'Bakboord' : 'Stuurboord';
+    const zone = zoneForRow(Math.floor(idx / 2));
+    const zoneLabel = zone === 'voor' ? 'Voor' : zone === 'motor' ? 'Motor' : 'Achter';
+    return `Bank ${row} · ${side} · ${zoneLabel}`;
+  }
+
+  // ===== Load / Save / Migrate =====
+  function load() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) { state = migrate(JSON.parse(raw)); return; }
+      const legacy = localStorage.getItem(LEGACY_KEY);
+      if (legacy) { state = migrate(JSON.parse(legacy)); save(); return; }
+    } catch (e) { console.warn('Load failed', e); }
+    state = migrate({});
+  }
+
+  function migrate(parsed) {
+    parsed = parsed || {};
+    const benches = (parsed.benches === 8 || parsed.benches === 9) ? parsed.benches : 8;
+    const seats = benches * 2;
+
+    const paddlers = (parsed.paddlers || []).map(p => ({
+      id: p.id || uid(),
+      name: String(p.name || ''),
+      weight: (typeof p.weight === 'number' && p.weight > 0) ? p.weight : null,
+      side: SIDES.includes(p.side) ? p.side : 'maakt niet uit',
+      trainings: (typeof p.trainings === 'number' && p.trainings >= 0 && p.trainings <= 5)
+        ? p.trainings : 0,
+      gender: GENDERS.includes(p.gender) ? p.gender : 'V',
+      posPref: PREFS.includes(p.posPref) ? p.posPref : 'geen voorkeur',
+      lockedSeat: (typeof p.lockedSeat === 'number' && p.lockedSeat >= 0 && p.lockedSeat < seats)
+        ? p.lockedSeat : null
+    })).filter(p => p.name);
+
+    // Verwijder dubbele lockedSeat-claims (defensief: laatste wint)
+    const seenLocks = new Set();
+    for (let i = paddlers.length - 1; i >= 0; i--) {
+      if (paddlers[i].lockedSeat !== null) {
+        if (seenLocks.has(paddlers[i].lockedSeat)) paddlers[i].lockedSeat = null;
+        else seenLocks.add(paddlers[i].lockedSeat);
+      }
+    }
+
+    let races;
+    if (Array.isArray(parsed.races) && parsed.races.length > 0) {
+      races = parsed.races.map(r => ({ seats: normalizeSeats(r && r.seats, seats) }));
+    } else if (Array.isArray(parsed.seats)) {
+      // v1 → race 1
+      races = [{ seats: normalizeSeats(parsed.seats, seats) }];
+    } else {
+      races = [];
+    }
+    while (races.length < N_RACES) races.push({ seats: Array(seats).fill(null) });
+    races = races.slice(0, N_RACES);
+
+    const ids = new Set(paddlers.map(p => p.id));
+    races.forEach(r => {
+      r.seats = r.seats.map(id => (id && ids.has(id)) ? id : null);
+    });
+
+    const activeRace = (typeof parsed.activeRace === 'number'
+      && parsed.activeRace >= 0 && parsed.activeRace < N_RACES) ? parsed.activeRace : 0;
+
+    const hideWeight = !!parsed.hideWeight;
+
+    return { benches, paddlers, races, activeRace, hideWeight };
+  }
+
+  function normalizeSeats(arr, target) {
+    const out = Array(target).fill(null);
+    if (!Array.isArray(arr)) return out;
+    for (let i = 0; i < Math.min(arr.length, target); i++) out[i] = arr[i] || null;
+    return out;
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch (e) { console.warn('Save failed', e); }
+  }
+
+  // ===== Helpers =====
+  function uid() { return 'p_' + Math.random().toString(36).slice(2, 9); }
+  function getPaddler(id) { return state.paddlers.find(p => p.id === id); }
+  function currentSeats() { return state.races[state.activeRace].seats; }
+  function isAssignedInRace(id, raceIdx = state.activeRace) {
+    return state.races[raceIdx].seats.includes(id);
+  }
+  function sideTag(side) {
+    if (side === 'links') return { cls: 'side-l', txt: 'BB' };
+    if (side === 'rechts') return { cls: 'side-r', txt: 'SB' };
+    return null;
+  }
+  function isLocked(p) { return p && typeof p.lockedSeat === 'number'; }
+  function lockedAt(idx) { return state.paddlers.find(p => p.lockedSeat === idx); }
+  function posPrefShort(p) {
+    if (!p || p === 'geen voorkeur') return null;
+    return p.charAt(0).toUpperCase() + p.slice(1);
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // ===== Render =====
+  function renderTopBadge() {
+    const s = totalSeats();
+    document.getElementById('topBadge').textContent =
+      `${s} plekken · ${state.benches} × 2`;
+  }
+  function renderRosterCount() {
+    const el = document.getElementById('rosterCount');
+    el.textContent = state.paddlers.length ? `${state.paddlers.length} totaal` : '';
+  }
+
+  function renderPool() {
+    const pool = document.getElementById('pool');
+    pool.innerHTML = '';
+    state.paddlers.forEach(p => {
+      const chip = document.createElement('div');
+      const here = isAssignedInRace(p.id);
+      chip.className = 'chip' + (here ? ' assigned' : '');
+      chip.dataset.id = p.id;
+
+      let html = `<span class="name">${escapeHtml(p.name)}</span>`;
+      if (p.weight) html += `<span class="kg">${p.weight}kg</span>`;
+      const st = sideTag(p.side);
+      if (st) html += `<span class="tag ${st.cls}">${st.txt}</span>`;
+      if (p.gender === 'M') html += `<span class="tag gender">M</span>`;
+      if (p.trainings > 0) html += `<span class="tag train">${p.trainings}×</span>`;
+      const pp = posPrefShort(p.posPref);
+      if (pp) html += `<span class="tag pos">${pp}</span>`;
+      html += `<span class="x" data-remove="${p.id}" aria-label="verwijder">×</span>`;
+
+      chip.innerHTML = html;
+      pool.appendChild(chip);
+    });
+    renderRosterCount();
+  }
+
+  function renderSeats() {
+    const rows = document.getElementById('rows');
+    rows.innerHTML = '';
+    for (let r = 0; r < state.benches; r++) {
+      const rowEl = document.createElement('div');
+      rowEl.className = 'row';
+
+      const leftIdx  = r * 2;
+      const rightIdx = r * 2 + 1;
+      rowEl.appendChild(renderSeat(leftIdx, 'left'));
+
+      const num = document.createElement('div');
+      num.className = 'row-num';
+      const zoneName = zoneForRow(r);
+      const zoneShort = zoneName === 'voor' ? 'V' : zoneName === 'motor' ? 'M' : 'A';
+      num.innerHTML =
+        `<div>${String(r + 1).padStart(2, '0')}</div>` +
+        `<span class="zone">${zoneShort}</span>`;
+      rowEl.appendChild(num);
+
+      rowEl.appendChild(renderSeat(rightIdx, 'right'));
+      rows.appendChild(rowEl);
+
+      if ((r === 2 || r === 5) && r + 1 < state.benches && zoneForRow(r) !== zoneForRow(r + 1)) {
+        const div = document.createElement('div');
+        div.className = 'zone-divider';
+        rows.appendChild(div);
+      }
+    }
+  }
+
+  function renderSeat(idx, side) {
+    const seat = document.createElement('div');
+    const seats = currentSeats();
+    const id = seats[idx];
+    seat.className = 'seat ' + side + (id ? ' filled' : '');
+    seat.dataset.idx = idx;
+
+    if (id) {
+      const p = getPaddler(id);
+      if (p) {
+        const seatSide = idx % 2 === 0 ? 'links' : 'rechts';
+        const mis = (p.side === 'links' || p.side === 'rechts') && p.side !== seatSide;
+        if (mis) seat.classList.add('misfit');
+        if (p.lockedSeat === idx) seat.classList.add('pinned');
+
+        const micro = [];
+        if (p.gender === 'M') micro.push('M');
+        if (p.trainings > 0) micro.push(p.trainings + '×');
+
+        seat.innerHTML =
+          `<div class="name">${escapeHtml(p.name)}</div>` +
+          (p.weight ? `<div class="weight">${p.weight} kg</div>` : '') +
+          (micro.length ? `<div class="micro">${micro.join(' · ')}</div>` : '') +
+          (p.lockedSeat === idx ? `<span class="pin-mark">📌</span>` : '');
+      } else {
+        seats[idx] = null;
+        seat.innerHTML = `<div class="empty-icon">+</div>`;
+      }
+    } else {
+      // Pinned-but-currently-empty: subtiele hint
+      const pinned = lockedAt(idx);
+      if (pinned) {
+        seat.classList.add('pinned');
+        seat.innerHTML = `<div class="empty-icon">📌</div>`;
+      } else {
+        seat.innerHTML = `<div class="empty-icon">+</div>`;
+      }
+    }
+    return seat;
+  }
+
+  function renderBalance() {
+    const seats = currentSeats();
+    let l = 0, r = 0, front = 0, back = 0;
+    const halfRow = Math.ceil(state.benches / 2);
+    seats.forEach((id, i) => {
+      if (!id) return;
+      const p = getPaddler(id);
+      if (!p) return;
+      const w = effW(p);
+      if (i % 2 === 0) l += w; else r += w;
+      const row = Math.floor(i / 2);
+      if (row < halfRow) front += w; else back += w;
+    });
+
+    setBar('fillL', 'fillR', l, r);
+    setBar('fillFront', 'fillBack', front, back);
+
+    document.getElementById('kgL').textContent     = Math.round(l) + ' kg';
+    document.getElementById('kgR').textContent     = Math.round(r) + ' kg';
+    document.getElementById('kgFront').textContent = Math.round(front) + ' kg';
+    document.getElementById('kgBack').textContent  = Math.round(back) + ' kg';
+
+    setDiff('diff', l, r);
+    setDiff('diffTrim', front, back);
+  }
+  function setBar(idA, idB, a, b) {
+    const tot = a + b;
+    const A = document.getElementById(idA);
+    const B = document.getElementById(idB);
+    if (tot === 0) { A.style.width = '50%'; B.style.width = '50%'; }
+    else { A.style.width = (a / tot * 100) + '%'; B.style.width = (b / tot * 100) + '%'; }
+  }
+  function setDiff(id, a, b) {
+    const el = document.getElementById(id);
+    const d = Math.round(Math.abs(a - b));
+    if (a + b === 0) { el.textContent = '·'; el.style.color = ''; return; }
+    el.textContent = '∆ ' + d + 'kg';
+    el.style.color = d <= 5 ? 'var(--teal)' : (d <= 12 ? 'var(--gold)' : 'var(--rose)');
+  }
+
+  function renderBench() {
+    const box = document.getElementById('benchBox');
+    box.innerHTML = '';
+    const seated = new Set(currentSeats().filter(Boolean));
+    const out = state.paddlers.filter(p => !seated.has(p.id));
+    if (out.length === 0 || state.paddlers.length === 0) return;
+    const title = document.createElement('div');
+    title.className = 'bench-title';
+    title.textContent = `Niet in race ${state.activeRace + 1} (${out.length})`;
+    box.appendChild(title);
+    const list = document.createElement('div');
+    list.className = 'bench-list';
+    out.forEach(p => {
+      const c = document.createElement('span');
+      c.className = 'b-chip';
+      let txt = p.name;
+      if (p.weight) txt += ` <span class="b-kg">${p.weight}kg</span>`;
+      c.innerHTML = txt;
+      list.appendChild(c);
+    });
+    box.appendChild(list);
+  }
+
+  function renderWarnings() {
+    const box = document.getElementById('warnings');
+    box.innerHTML = '';
+    const seats = currentSeats();
+    const filled = seats.filter(Boolean);
+    if (filled.length === 0) return;
+
+    let l = 0, r = 0;
+    let front = 0, back = 0;
+    const halfRow = Math.ceil(state.benches / 2);
+    let misfits = 0;
+    seats.forEach((id, i) => {
+      if (!id) return;
+      const p = getPaddler(id);
+      if (!p) return;
+      const w = effW(p);
+      if (i % 2 === 0) l += w; else r += w;
+      const row = Math.floor(i / 2);
+      if (row < halfRow) front += w; else back += w;
+      const seatSide = i % 2 === 0 ? 'links' : 'rechts';
+      if ((p.side === 'links' || p.side === 'rechts') && p.side !== seatSide) misfits++;
+    });
+
+    const lrDiff = Math.abs(l - r);
+    if (lrDiff > LR_WARN_KG && filled.length >= 4) {
+      addWarn(box, `Bakboord/stuurboord uit balans (∆ ${Math.round(lrDiff)} kg)`,
+        lrDiff > LR_WARN_KG * 2.5);
+    }
+    const trimDiff = Math.abs(front - back);
+    if (trimDiff > TRIM_WARN_KG && filled.length >= 6) {
+      addWarn(box, `Trim scheef (∆ ${Math.round(trimDiff)} kg voor/achter)`,
+        trimDiff > TRIM_WARN_KG * 2);
+    }
+    if (misfits > 0) {
+      addWarn(box, `${misfits} roeier${misfits > 1 ? 's' : ''} aan verkeerde kant`, true);
+    }
+
+    const lowSeated = filled
+      .map(id => getPaddler(id))
+      .filter(p => p && (p.trainings || 0) <= 1).length;
+    if (lowSeated > LOW_TRAINED_PER_RACE_WARN && filled.length >= 8) {
+      addWarn(box, `${lowSeated} laag-getrainde roeiers in deze race`, false);
+    }
+  }
+  function addWarn(box, msg, bad) {
+    const w = document.createElement('div');
+    w.className = 'warn' + (bad ? ' bad' : '');
+    w.textContent = msg;
+    box.appendChild(w);
+  }
+
+  function syncSegs() {
+    document.querySelectorAll('.seg[data-field]').forEach(seg => {
+      if (seg.dataset.edit) return;
+      const field = seg.dataset.field;
+      let val;
+      if (field === 'benches') val = String(state.benches);
+      else if (field === 'activeRace') val = String(state.activeRace);
+      else val = String(pendingMeta[field]);
+      seg.querySelectorAll('button').forEach(b => {
+        b.classList.toggle('active', b.dataset.val === val);
+      });
+    });
+  }
+
+  function renderHideWeightButton() {
+    const btn = document.getElementById('hideWeightBtn');
+    btn.classList.toggle('active', !!state.hideWeight);
+    btn.querySelector('span:last-child').textContent =
+      state.hideWeight ? 'Gewicht verborgen' : 'Verberg gewicht';
+    document.body.classList.toggle('hide-weight', !!state.hideWeight);
+  }
+
+  function render() {
+    renderTopBadge();
+    syncSegs();
+    renderPool();
+    renderSeats();
+    renderBalance();
+    renderWarnings();
+    renderBench();
+    renderHideWeightButton();
+  }
+
+  // ===== Seat modal =====
+  let activeSeatIdx = null;
+  function openModal(idx) {
+    activeSeatIdx = idx;
+    document.getElementById('modalSub').textContent = seatLabel(idx);
+    const list = document.getElementById('personList');
+    list.innerHTML = '';
+    const seats = currentSeats();
+    const occupant = seats[idx] ? getPaddler(seats[idx]) : null;
+    const isPinnedHere = occupant && occupant.lockedSeat === idx;
+    const pinnedHereButEmpty = !occupant && lockedAt(idx);
+
+    // Actie-rij bovenaan: pin + leeg, naast elkaar
+    if (occupant || pinnedHereButEmpty) {
+      const actions = document.createElement('div');
+      actions.className = 'modal-actions-row';
+
+      if (occupant) {
+        const pin = document.createElement('div');
+        pin.className = 'person-item pin-option';
+        pin.innerHTML = isPinnedHere
+          ? '<span>📌 Losmaken</span>'
+          : '<span>📌 Vastzetten</span>';
+        pin.addEventListener('click', () => {
+          if (isPinnedHere) {
+            occupant.lockedSeat = null;
+            toast('Losgemaakt');
+          } else {
+            // Bestaande lock van iemand anders op deze stoel: wis
+            state.paddlers.forEach(other => {
+              if (other.id !== occupant.id && other.lockedSeat === idx) other.lockedSeat = null;
+            });
+            // Bestaande lock van deze persoon elders: wis
+            if (occupant.lockedSeat !== null && occupant.lockedSeat !== idx) {
+              occupant.lockedSeat = null;
+            }
+            occupant.lockedSeat = idx;
+            toast('Vastgezet');
+          }
+          save(); render(); closeModal();
+        });
+        actions.appendChild(pin);
+      } else if (pinnedHereButEmpty) {
+        const pinned = pinnedHereButEmpty;
+        const unpin = document.createElement('div');
+        unpin.className = 'person-item pin-option';
+        unpin.innerHTML = `<span>📌 Losmaken (${escapeHtml(pinned.name)})</span>`;
+        unpin.addEventListener('click', () => {
+          pinned.lockedSeat = null;
+          save(); render(); closeModal();
+          toast('Losgemaakt');
+        });
+        actions.appendChild(unpin);
+      }
+
+      if (occupant) {
+        const clear = document.createElement('div');
+        clear.className = 'person-item clear-option';
+        clear.innerHTML = '<span>✕ Stoel leeg</span>';
+        clear.addEventListener('click', () => {
+          // Locks blijven staan op de paddler — algoritmes plaatsen 'm terug.
+          seats[idx] = null;
+          save(); render(); closeModal();
+          toast('Stoel leeg');
+        });
+        actions.appendChild(clear);
+      }
+
+      list.appendChild(actions);
+    }
+
+    if (state.paddlers.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'empty-pool-msg';
+      empty.textContent = 'Nog geen roeiers toegevoegd. Sluit dit, voeg eerst namen toe.';
+      list.appendChild(empty);
+    } else {
+      const seatSide = idx % 2 === 0 ? 'links' : 'rechts';
+      const sorted = [...state.paddlers].sort((a, b) => {
+        const aFit = (a.side === seatSide || a.side === 'maakt niet uit') ? 0 : 1;
+        const bFit = (b.side === seatSide || b.side === 'maakt niet uit') ? 0 : 1;
+        if (aFit !== bFit) return aFit - bFit;
+        return a.name.localeCompare(b.name);
+      });
+
+      sorted.forEach(p => {
+        const item = document.createElement('div');
+        const assignedSeat = seats.indexOf(p.id);
+        const here = assignedSeat === idx;
+        const elsewhere = assignedSeat !== -1 && !here;
+        const wrongSide = (p.side === 'links' || p.side === 'rechts') && p.side !== seatSide;
+        // wrongSide is een harde block — disabled klasse zorgt voor pointer-events:none
+        item.className = 'person-item'
+          + (here ? ' disabled' : '')
+          + (wrongSide ? ' disabled locked' : '');
+
+        const meta = [];
+        if (p.side !== 'maakt niet uit') meta.push(p.side === 'links' ? 'BB' : 'SB');
+        if (p.gender === 'M') meta.push('M');
+        if (p.trainings > 0) meta.push(p.trainings + '×');
+        if (p.posPref !== 'geen voorkeur') meta.push(posPrefShort(p.posPref));
+
+        item.innerHTML =
+          `<div class="pinfo">` +
+            `<span class="pname">${escapeHtml(p.name)}` +
+              (elsewhere ? ' <span style="opacity:.5;font-size:12px">(verplaatst)</span>' : '') +
+              (wrongSide ? ' <span style="opacity:.85;font-size:11px;color:var(--rose)">🔒 alleen ' + (p.side === 'links' ? 'bakboord' : 'stuurboord') + '</span>' : '') +
+            `</span>` +
+            (meta.length ? `<span class="pmeta">${meta.map(m => `<span class="t">${m}</span>`).join('')}</span>` : '') +
+          `</div>` +
+          (p.weight ? `<span class="pkg">${p.weight} kg</span>` : '');
+
+        if (!wrongSide && !here) {
+          item.addEventListener('click', () => {
+            if (elsewhere) seats[assignedSeat] = null;
+            // Conflicterende locks opruimen:
+            // - andere paddler die op deze stoel vast stond: wis
+            // - eigen lock op een andere stoel: wis (user verplaatst hem expliciet)
+            state.paddlers.forEach(other => {
+              if (other.id === p.id) {
+                if (other.lockedSeat !== null && other.lockedSeat !== idx) other.lockedSeat = null;
+              } else if (other.lockedSeat === idx) {
+                other.lockedSeat = null;
+              }
+            });
+            seats[idx] = p.id;
+            save(); render(); closeModal();
+          });
+        }
+        list.appendChild(item);
+      });
+    }
+
+    document.getElementById('modalBg').classList.add('show');
+  }
+  function closeModal() {
+    document.getElementById('modalBg').classList.remove('show');
+    activeSeatIdx = null;
+  }
+
+  // ===== Edit-paddler modal =====
+  let editingId = null;
+  let editDraft = null;
+
+  function openEdit(id) {
+    const p = getPaddler(id);
+    if (!p) return;
+    editingId = id;
+    editDraft = {
+      name: p.name,
+      weight: p.weight,
+      side: p.side,
+      trainings: p.trainings || 0,
+      gender: p.gender,
+      posPref: p.posPref
+    };
+    document.getElementById('editSub').textContent = p.name;
+    document.getElementById('editName').value = p.name;
+    document.getElementById('editWeight').value = p.weight || '';
+    document.querySelectorAll('.seg[data-edit="1"]').forEach(seg => {
+      const field = seg.dataset.field;
+      const val = String(editDraft[field]);
+      seg.querySelectorAll('button').forEach(b => {
+        b.classList.toggle('active', b.dataset.val === val);
+      });
+    });
+    document.getElementById('editBg').classList.add('show');
+    setTimeout(() => document.getElementById('editName').focus(), 50);
+  }
+  function closeEdit() {
+    document.getElementById('editBg').classList.remove('show');
+    editingId = null; editDraft = null;
+  }
+
+  // ===== Toast =====
+  let toastTimer = null;
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  // ===== Add / Remove / Edit paddler =====
+  function addPaddler() {
+    const nameEl = document.getElementById('nameInput');
+    const weightEl = document.getElementById('weightInput');
+    const name = nameEl.value.trim();
+    const weight = weightEl.value ? Number(weightEl.value) : null;
+    if (!name) { nameEl.focus(); return; }
+    state.paddlers.push({
+      id: uid(),
+      name,
+      weight: (weight && weight > 0) ? weight : null,
+      side: pendingMeta.side,
+      trainings: Number(pendingMeta.trainings) || 0,
+      gender: pendingMeta.gender,
+      posPref: pendingMeta.posPref
+    });
+    nameEl.value = ''; weightEl.value = '';
+    pendingMeta.trainings = 0; // alleen trainings resetten — andere meta sticky
+    nameEl.focus();
+    save(); render();
+  }
+  function removePaddler(id) {
+    state.paddlers = state.paddlers.filter(p => p.id !== id);
+    state.races.forEach(r => {
+      r.seats = r.seats.map(s => s === id ? null : s);
+    });
+    save(); render();
+  }
+  function saveEdit() {
+    if (!editingId || !editDraft) return;
+    const p = getPaddler(editingId);
+    if (!p) { closeEdit(); return; }
+    const name = document.getElementById('editName').value.trim();
+    const wRaw = document.getElementById('editWeight').value;
+    if (!name) return;
+    p.name = name;
+    p.weight = wRaw ? Number(wRaw) : null;
+    p.side = editDraft.side;
+    p.trainings = Number(editDraft.trainings) || 0;
+    p.gender = editDraft.gender;
+    p.posPref = editDraft.posPref;
+    save(); render(); closeEdit();
+    toast('Roeier bijgewerkt');
+  }
+
+  // ===== Config changes =====
+  function setBenches(n) {
+    if (n !== 8 && n !== 9) return;
+    if (n === state.benches) return;
+    state.benches = n;
+    const seats = totalSeats();
+    state.races = state.races.map(r => ({ seats: normalizeSeats(r.seats, seats) }));
+    // Wis locks die nu buiten de boot vallen
+    state.paddlers.forEach(p => {
+      if (typeof p.lockedSeat === 'number' && p.lockedSeat >= seats) p.lockedSeat = null;
+    });
+    save(); render();
+  }
+  function setActiveRace(idx) {
+    if (idx < 0 || idx >= N_RACES) return;
+    state.activeRace = idx;
+    save(); render();
+  }
+  function toggleHideWeight() {
+    state.hideWeight = !state.hideWeight;
+    save();
+    renderHideWeightButton();
+  }
+
+  function clearCurrentRace() {
+    if (!currentSeats().some(s => s)) return;
+    if (!confirm(`Race ${state.activeRace + 1} leegmaken?`)) return;
+    state.races[state.activeRace].seats = Array(totalSeats()).fill(null);
+    save(); render();
+    toast('Race geleegd');
+  }
+
+  function loadDummyData() {
+    if (!confirm(`Vervang alle data met ${DUMMY_ROEIERS.length} test-roeiers?`)) return;
+    state.paddlers = DUMMY_ROEIERS.map(d => ({ ...d, id: uid() }));
+    const seats = totalSeats();
+    state.races = Array.from({ length: N_RACES }, () => ({ seats: Array(seats).fill(null) }));
+    state.activeRace = 0;
+    save(); render();
+    toast(`${DUMMY_ROEIERS.length} testroeiers geladen`);
+  }
+
+  // ===== Plaatsings-helper: zone → L/R, respecteert side (hard) & posPref =====
+  // Harde regel: roeier met side='links' komt NOOIT op stuurboord, en vice versa.
+  // 1-stage greedy: posPref-preferrers eerst (op sterkte), dan rest op score-fit.
+  // Past iemand nergens dan blijft hij op de bank.
+  function placeInBoat(paddlers, benches = state.benches) {
+    const seats = Array(benches * 2).fill(null);
+    if (paddlers.length === 0) return seats;
+    const zones = zonesConfig(benches);
+
+    // Per zone: L/R-capaciteit en huidig gebruik.
+    const zCap  = {}, zUsed = {};
+    zones.forEach(z => {
+      zCap[z.name]  = { L: z.rows.length, R: z.rows.length };
+      zUsed[z.name] = { L: 0, R: 0, F: 0 };
+    });
+
+    // canFit checkt zowel zone-totaal (i.v.m. flex die later slots opslokt)
+    // als hard-side capaciteit binnen die zone.
+    function canFit(p, zone) {
+      const used = zUsed[zone].L + zUsed[zone].R + zUsed[zone].F;
+      const cap  = zCap[zone].L + zCap[zone].R;
+      if (used >= cap) return false;
+      if (p.side === 'links')  return zUsed[zone].L < zCap[zone].L;
+      if (p.side === 'rechts') return zUsed[zone].R < zCap[zone].R;
+      return true; // flex
+    }
+    function placeIn(p, zone) {
+      if (p.side === 'links')       zUsed[zone].L++;
+      else if (p.side === 'rechts') zUsed[zone].R++;
+      else                          zUsed[zone].F++;
+    }
+
+    const ranked = [...paddlers].sort((a, b) => sterkte(b) - sterkte(a));
+    const zoneBucket = { voor: [], motor: [], achter: [] };
+    const placedIds  = new Set();
+
+    // PASS 0: Pre-place locked paddlers op hun vastgezette plek.
+    // Deze seats worden direct in `seats` gezet en consumeren L/R-capaciteit van hun zone.
+    paddlers.forEach(p => {
+      if (typeof p.lockedSeat !== 'number') return;
+      const idx = p.lockedSeat;
+      if (idx < 0 || idx >= benches * 2) return;
+      if (seats[idx]) return; // dubbele claim — neem de eerste
+      seats[idx] = p.id;
+      placedIds.add(p.id);
+      const row = Math.floor(idx / 2);
+      const isLeft = idx % 2 === 0;
+      const zone = zoneForRow(row);
+      if (isLeft) zUsed[zone].L++;
+      else        zUsed[zone].R++;
+    });
+
+    // PASS 1: posPref hard binnen zone-cap, sterkste preferrer eerst.
+    // Bij overflow van een zone vallen de zwakste preferrers terug naar pass 2.
+    ['voor', 'motor', 'achter'].forEach(zone => {
+      const cand = ranked.filter(p => p.posPref === zone);
+      for (const p of cand) {
+        if (placedIds.has(p.id)) continue;
+        if (!canFit(p, zone)) continue;
+        zoneBucket[zone].push(p);
+        placeIn(p, zone);
+        placedIds.add(p.id);
+      }
+    });
+
+    // PASS 2: rest op sterkte-volgorde, in beste-score-zone die nog past.
+    // (Sterkten eerst → de strongest team blijft de strongest.)
+    const remaining = ranked.filter(p => !placedIds.has(p.id));
+    remaining.forEach(p => {
+      const s = { voor: scoreVoor(p), motor: scoreMotor(p), achter: scoreAchter(p) };
+      const order = Object.entries(s).sort((a, b) => b[1] - a[1]).map(e => e[0]);
+      for (const zone of order) {
+        if (canFit(p, zone)) {
+          zoneBucket[zone].push(p);
+          placeIn(p, zone);
+          placedIds.add(p.id);
+          return;
+        }
+      }
+      // Past nergens → roeier zit op de bank.
+    });
+
+    // PASS 3: L/R binnen zone (zie assignSideBalanced).
+    zones.forEach(z => {
+      assignSideBalanced(zoneBucket[z.name], z.rows, seats);
+    });
+
+    return seats;
+  }
+
+  // Score-functies: alléén "natuurlijke fit" — posPref wordt nu in pass 1 hard afgehandeld.
+  function scoreVoor(p) {
+    // Voor (1-3): consistent, niet de zwaarsten. Bias naar mediaan-sterkte (~50).
+    const s = sterkte(p);
+    return 60 - Math.abs(s - 50) * 0.6;
+  }
+  function scoreMotor(p) {
+    // Motor (4-6): power-to-weight.
+    const ptw = sterkte(p) / effW(p);
+    return ptw * 70;
+  }
+  function scoreAchter(p) {
+    // Achter (7-9): sterkste + ervaring (trainingen).
+    const s = sterkte(p);
+    const t = (p.trainings || 0);
+    return s * 0.75 + t * 7;
+  }
+
+  function assignSideBalanced(paddlers, rowIdxs, seats) {
+    if (rowIdxs.length === 0) return;
+    let leftQ  = paddlers.filter(p => p.side === 'links').slice();
+    let rightQ = paddlers.filter(p => p.side === 'rechts').slice();
+    let flex   = paddlers.filter(p => p.side === 'maakt niet uit').slice();
+
+    // Sla seats over die al gevuld zijn (door locked paddlers in PASS 0).
+    const availL = rowIdxs.map(r => r * 2).filter(i => !seats[i]);
+    const availR = rowIdxs.map(r => r * 2 + 1).filter(i => !seats[i]);
+    const capL = availL.length;
+    const capR = availR.length;
+
+    // Harde regel: never wrong-side. Overflow valt weg.
+    if (leftQ.length > capL)  leftQ  = leftQ.slice(0, capL);
+    if (rightQ.length > capR) rightQ = rightQ.slice(0, capR);
+
+    flex.sort((a, b) => effW(b) - effW(a));
+
+    let lW = leftQ.reduce((s, p) => s + effW(p), 0);
+    let rW = rightQ.reduce((s, p) => s + effW(p), 0);
+
+    flex.forEach(p => {
+      const lFull = leftQ.length >= capL;
+      const rFull = rightQ.length >= capR;
+      if (lFull && rFull) return;
+      if (lFull)         { rightQ.push(p); rW += effW(p); }
+      else if (rFull)    { leftQ.push(p);  lW += effW(p); }
+      else if (lW <= rW) { leftQ.push(p);  lW += effW(p); }
+      else               { rightQ.push(p); rW += effW(p); }
+    });
+
+    leftQ.sort((a, b)  => effW(b) - effW(a));
+    rightQ.sort((a, b) => effW(b) - effW(a));
+
+    leftQ  = leftQ.slice(0, capL);
+    rightQ = rightQ.slice(0, capR);
+
+    for (let i = 0; i < leftQ.length; i++)  seats[availL[i]] = leftQ[i].id;
+    for (let i = 0; i < rightQ.length; i++) seats[availR[i]] = rightQ[i].id;
+  }
+
+  // ===== Algoritme 1: Sterkste team (huidige race) =====
+  function buildStrongestTeam() {
+    if (state.paddlers.length === 0) { toast('Geen roeiers'); return; }
+    const seats = placeInBoat(state.paddlers, state.benches);
+    state.races[state.activeRace].seats = seats;
+    save(); render();
+    const filled = seats.filter(Boolean).length;
+    const out = state.paddlers.length - filled;
+    toast(out > 0
+      ? `Sterkste team · ${out} op de bank`
+      : `Sterkste team gevuld`);
+  }
+
+  // ===== Algoritme 2: Eerlijke verdeling over 3 races =====
+  function buildFairRaces() {
+    const paddlers = state.paddlers;
+    const n = paddlers.length;
+    if (n === 0) { toast('Geen roeiers'); return; }
+    const seatsPerRace = totalSeats();
+
+    // Locked paddlers zijn ALTIJD in alle 3 races. Ze consumeren #locked seats per race.
+    const lockedPaddlers = paddlers.filter(isLocked);
+    const nonLocked      = paddlers.filter(p => !isLocked(p));
+    const nl = nonLocked.length;
+    const capPerRace = Math.max(0, seatsPerRace - lockedPaddlers.length);
+    const totalSlots = capPerRace * N_RACES;
+
+    // 1) Counts (alleen non-locked): iedereen 1 race (hard), dan extras eerst aan high-trained.
+    const counts = new Map();
+    nonLocked.forEach(p => counts.set(p.id, 1));
+    let remaining = Math.max(0, totalSlots - nl);
+
+    const isLow  = p => (p.trainings || 0) <= 1;
+    const high = nonLocked.filter(p => !isLow(p))
+      .sort((a, b) => (b.trainings || 0) - (a.trainings || 0) || sterkte(b) - sterkte(a));
+    const low  = nonLocked.filter(isLow)
+      .sort((a, b) => sterkte(b) - sterkte(a));
+
+    function giveExtras(group) {
+      for (let target = 2; target <= N_RACES && remaining > 0; target++) {
+        for (const p of group) {
+          if (remaining <= 0) break;
+          if (counts.get(p.id) < target) {
+            counts.set(p.id, target);
+            remaining--;
+          }
+        }
+      }
+    }
+    giveExtras(high);
+    giveExtras(low);
+
+    // 2) Verdeling van non-locked over races. Locked paddlers worden los toegevoegd
+    //    in de pre-pass van placeInBoat (PASS 0).
+    const cap = capPerRace;
+    const racesNL = [[], [], []];
+
+    // count=3 → in alle 3 races
+    nonLocked.forEach(p => {
+      if (counts.get(p.id) >= 3) {
+        for (let r = 0; r < N_RACES; r++) {
+          if (racesNL[r].length < cap) racesNL[r].push(p);
+        }
+      }
+    });
+
+    // count=2 → skip-rotation
+    const count2 = [...low, ...high].filter(p => counts.get(p.id) === 2);
+    let skipCursor = 0;
+    count2.forEach(p => {
+      const skip = skipCursor % N_RACES;
+      skipCursor++;
+      let added = 0;
+      for (let r = 0; r < N_RACES && added < 2; r++) {
+        if (r === skip) continue;
+        if (racesNL[r].length < cap) { racesNL[r].push(p); added++; }
+      }
+      if (added < 2) {
+        if (racesNL[skip].length < cap && !racesNL[skip].includes(p)) { racesNL[skip].push(p); added++; }
+        for (let r = 0; r < N_RACES && added < 2; r++) {
+          if (racesNL[r].length < cap && !racesNL[r].includes(p)) { racesNL[r].push(p); added++; }
+        }
+      }
+    });
+
+    // count=1 → 1 race round-robin (low first → max spreiding)
+    const count1 = [...low, ...high].filter(p => counts.get(p.id) === 1);
+    let raceCursor = 0;
+    count1.forEach(p => {
+      for (let off = 0; off < N_RACES; off++) {
+        const r = (raceCursor + off) % N_RACES;
+        if (racesNL[r].length < cap) {
+          racesNL[r].push(p);
+          raceCursor = (raceCursor + 1) % N_RACES;
+          return;
+        }
+      }
+    });
+
+    // 3) Per race plaatsing: locked + non-locked
+    const finalRaces = racesNL.map(rNL => [...lockedPaddlers, ...rNL]);
+    state.races = finalRaces.map(rp => ({ seats: placeInBoat(rp, state.benches) }));
+    save(); render();
+
+    const sitOut = racesNL.map(r => nl - r.length);
+    const totalEmpty = racesNL.reduce((s, r) => s + (cap - r.length), 0);
+    if (totalEmpty > 0) {
+      toast(`Eerlijk verdeeld · ${totalEmpty} stoel${totalEmpty > 1 ? 'en' : ''} leeg`);
+    } else {
+      toast(`Eerlijk verdeeld · bank ${sitOut.join(' / ')}`);
+    }
+  }
+
+  // ===== Wire up =====
+  document.getElementById('addBtn').addEventListener('click', addPaddler);
+  document.getElementById('nameInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const w = document.getElementById('weightInput');
+      if (w.value) addPaddler(); else w.focus();
+    }
+  });
+  document.getElementById('weightInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addPaddler();
+  });
+
+  document.getElementById('pool').addEventListener('click', e => {
+    const x = e.target.closest('[data-remove]');
+    if (x) { e.stopPropagation(); removePaddler(x.dataset.remove); return; }
+    const chip = e.target.closest('.chip[data-id]');
+    if (chip) openEdit(chip.dataset.id);
+  });
+
+  document.getElementById('rows').addEventListener('click', e => {
+    const seat = e.target.closest('.seat');
+    if (seat) openModal(Number(seat.dataset.idx));
+  });
+
+  document.getElementById('modalBg').addEventListener('click', e => {
+    if (e.target.id === 'modalBg') closeModal();
+  });
+  document.getElementById('editBg').addEventListener('click', e => {
+    if (e.target.id === 'editBg') closeEdit();
+  });
+
+  document.getElementById('clearBtn').addEventListener('click', clearCurrentRace);
+  document.getElementById('strongBtn').addEventListener('click', buildStrongestTeam);
+  document.getElementById('fairBtn').addEventListener('click', () => {
+    if (!confirm('Verdeel alle 3 de races opnieuw?')) return;
+    buildFairRaces();
+  });
+  document.getElementById('hideWeightBtn').addEventListener('click', toggleHideWeight);
+
+  document.body.addEventListener('click', e => {
+    const btn = e.target.closest('.seg button');
+    if (!btn) return;
+    const seg = btn.closest('.seg');
+    if (!seg) return;
+    const field = seg.dataset.field;
+    const val = btn.dataset.val;
+    const isEdit = seg.dataset.edit === '1';
+
+    seg.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
+
+    if (isEdit) {
+      if (!editDraft) return;
+      if (field === 'trainings') editDraft.trainings = Number(val);
+      else editDraft[field] = val;
+      return;
+    }
+
+    if (field === 'benches') setBenches(Number(val));
+    else if (field === 'activeRace') setActiveRace(Number(val));
+    else if (field === 'trainings') pendingMeta.trainings = Number(val);
+    else pendingMeta[field] = val;
+  });
+
+  document.getElementById('editSave').addEventListener('click', saveEdit);
+  document.getElementById('editCancel').addEventListener('click', closeEdit);
+  document.getElementById('editDelete').addEventListener('click', () => {
+    if (!editingId) return;
+    if (!confirm('Roeier verwijderen?')) return;
+    const id = editingId;
+    closeEdit();
+    removePaddler(id);
+  });
+  document.getElementById('editName').addEventListener('keydown', e => {
+    if (e.key === 'Enter') saveEdit();
+    if (e.key === 'Escape') closeEdit();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('modalBg').classList.contains('show')) closeModal();
+      else if (document.getElementById('editBg').classList.contains('show')) closeEdit();
+    }
+    // Verstopte hotkey: Cmd/Ctrl + Shift + D → dummy data
+    if ((e.metaKey || e.ctrlKey) && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+      e.preventDefault();
+      loadDummyData();
+    }
+  });
+
+  // ===== Boot =====
+  load();
+  render();
+})();
+</script>
+
+</body>
+</html>
